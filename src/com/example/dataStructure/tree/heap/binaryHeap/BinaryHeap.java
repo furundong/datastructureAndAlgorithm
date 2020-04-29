@@ -39,7 +39,7 @@ public class BinaryHeap<E> extends AbstractHeap<E> {
 
         //自下而上的下滤  O（n）
         for (int i = (size >> 1) - 1; i >= 0; i++) { //从非叶子节点的index开始,-1是最后一个index
-            siftUp(i);
+            siftDown(i);
         }
     }
 

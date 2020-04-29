@@ -23,6 +23,7 @@ public class testJava8 {
         list.add(3);
         list.add(4);
         list.add(5);
+        System.out.println("list = " + list);
         Stream<Integer> integerStream = list.stream().filter(s -> s > 4);
         Object[] objects = integerStream.toArray();
         System.out.println("objects = " + Arrays.toString(objects));

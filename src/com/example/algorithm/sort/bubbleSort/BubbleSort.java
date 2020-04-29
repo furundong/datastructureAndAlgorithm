@@ -1,6 +1,6 @@
 package com.example.algorithm.sort.bubbleSort;
 
-import com.example.algorithm.sort.util.Sort;
+import com.example.algorithm.sort.Sort;
 
 /**
  * create by Freedom on 2020/4/21

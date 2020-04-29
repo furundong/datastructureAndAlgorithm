@@ -1,4 +1,4 @@
-package com.example.algorithm.sort.util;
+package com.example.algorithm.sort;
 
 import java.util.Arrays;
 
@@ -24,10 +24,10 @@ public abstract class Sort<T extends Comparable<T>> implements Comparable<Sort<T
     protected abstract void sort();
 
     protected void swap(int i, int i2) {
+        swapCount++;
         T temp = array[i];
         array[i] = array[i2];
         array[i2] = temp;
-        swapCount++;
     }
 
     protected int cmpIndex(int i, int i2) {

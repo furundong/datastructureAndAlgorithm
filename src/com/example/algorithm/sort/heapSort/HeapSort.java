@@ -1,6 +1,6 @@
 package com.example.algorithm.sort.heapSort;
 
-import com.example.algorithm.sort.util.Sort;
+import com.example.algorithm.sort.Sort;
 
 /**
  * create by Freedom on 2020/4/22
@@ -25,7 +25,7 @@ public class HeapSort<T extends Comparable<T>> extends Sort<T> {
     protected void sort() {
         // 原地建堆，下滤
         heapSize = array.length;
-        for (int i = (heapSize >> 1) - 1; i >= 0; i--) {
+        for (int i = (heapSize >> 1) - 1; i >= 0; i--) { //具体看堆的数据结构
             siftDown(i);
         }
 
