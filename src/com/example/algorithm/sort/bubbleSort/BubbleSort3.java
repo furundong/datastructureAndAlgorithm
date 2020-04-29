@@ -5,7 +5,7 @@ import com.example.algorithm.sort.util.Sort;
 /**
  * create by Freedom on 2020/4/21
  */
-public class BubbleSort3 extends Sort {
+public class BubbleSort3<T extends Comparable<T>> extends Sort<T> {
 
     @Override
     protected void sort() {

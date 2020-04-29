@@ -11,12 +11,12 @@ public class Main {
     public static void main(String[] args) {
         // write your code here
         Integer[] arrays = {12, 4, 1, 2, 41, 0, 55, 6, 2};
-        BubbleSort bubbleSort = new BubbleSort();
+        BubbleSort<Integer> bubbleSort = new BubbleSort<>();
         bubbleSort.sort(arrays);
         System.out.println("bubbleSort = " + bubbleSort);
 
         Integer[] array = {12, 4, 1, 2, 41, 0, 55, 6, 2};
-        HeapSort heapSort = new HeapSort();
+        HeapSort<Integer> heapSort = new HeapSort<Integer>();
         heapSort.sort(array);
         System.out.println("heapSort = " + heapSort);
 

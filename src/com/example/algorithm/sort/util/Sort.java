@@ -5,15 +5,15 @@ import java.util.Arrays;
 /**
  * create by Freedom on 2020/4/21
  */
-public abstract class Sort implements Comparable{
-    protected Integer[] array;
+public abstract class Sort<T extends Comparable<T>> implements Comparable<Sort<T>> {
+    protected T[] array;
     private Long endTime;
     private int swapCount;
     private int cmpCount;
 
 
-    public void sort(Integer[] arrays){
-        if(arrays == null || arrays.length<2)
+    public void sort(T[] arrays) {
+        if (arrays == null || arrays.length < 2)
             return;
         this.array = arrays;
         long startTime = System.currentTimeMillis();
@@ -23,26 +23,30 @@ public abstract class Sort implements Comparable{
 
     protected abstract void sort();
 
-    protected void swap(int i,int i2){
-        Integer temp = array[i];
+    protected void swap(int i, int i2) {
+        T temp = array[i];
         array[i] = array[i2];
         array[i2] = temp;
         swapCount++;
     }
 
-    protected int cmpIndex(int i, int i2){
+    protected int cmpIndex(int i, int i2) {
         cmpCount++;
-        return array[i] - array[i2];
+        return array[i].compareTo(array[i2]);
     }
 
-    protected int cmp(int i, int i2){
+    protected int cmp(T i, T i2) {
         cmpCount++;
-        return i-i2;
+        return i.compareTo(i2);
     }
 
     @Override
-    public int compareTo(Object o) {
-        return 0;
+    public int compareTo(Sort<T> o) {
+        long time = this.endTime - o.endTime;
+        if (time != 0) return (int) time;
+        int i = this.cmpCount - o.cmpCount;
+        if (i != 0) return i;
+        return this.swapCount - o.swapCount;
     }
 
     @Override
@@ -52,7 +56,7 @@ public abstract class Sort implements Comparable{
                 ",\t 耗时=" + endTime +
                 ",\t swapCount=" + swapCount +
                 ",\t cmpCount=" + cmpCount +
-                "}\n"+
+                "}\n" +
                 "---------------------------------------------------------------------------------------------------";
     }
 }

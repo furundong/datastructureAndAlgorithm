@@ -5,7 +5,7 @@ import com.example.algorithm.sort.util.Sort;
 /**
  * create by Freedom on 2020/4/21
  */
-public class BubbleSort extends Sort {
+public class BubbleSort<T extends Comparable<T>> extends Sort<T> {
     @Override
     protected void sort() {
         for (int end = array.length - 1; end > 0; end--) {

@@ -17,7 +17,7 @@ import com.example.algorithm.sort.util.Sort;
  * 最好，最坏，平均时间复杂度：O(nlogn)。
  * 空间复杂度O(1)，属于不稳定排序。
  */
-public class HeapSort extends Sort {
+public class HeapSort<T extends Comparable<T>> extends Sort<T> {
 
     private int heapSize;
 
@@ -41,13 +41,13 @@ public class HeapSort extends Sort {
     }
 
     private void siftDown(int index) {
-        Integer element = array[index];
+        T element = array[index];
 
         int half = heapSize >> 1; //非叶子节点的个数
         while (index < half) { // index必须是非叶子节点
             // 默认是左边跟父节点比
             int childIndex = (index << 1) + 1; //左子节点
-            Integer child = array[childIndex];
+            T child = array[childIndex];
 
             int rightIndex = childIndex + 1; //右子节点
             // 右子节点比左子节点大
