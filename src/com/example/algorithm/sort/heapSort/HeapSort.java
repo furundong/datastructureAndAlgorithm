@@ -2,6 +2,8 @@ package com.example.algorithm.sort.heapSort;
 
 import com.example.algorithm.sort.Sort;
 
+import java.util.Arrays;
+
 /**
  * create by Freedom on 2020/4/22
  * 堆排序可以认为是对选择排序的一种优化。
@@ -29,6 +31,7 @@ public class HeapSort<T extends Comparable<T>> extends Sort<T> {
             siftDown(i);
         }
 
+        System.out.println("this.array = " + Arrays.toString(this.array));
         //自下而上的下滤
 
         while (heapSize > 1) {

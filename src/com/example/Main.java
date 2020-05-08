@@ -3,6 +3,7 @@ package com.example;
 import com.example.algorithm.sort.bubbleSort.BubbleSort;
 import com.example.algorithm.sort.heapSort.HeapSort;
 import com.example.algorithm.sort.insertSort.InsertSort;
+import com.example.algorithm.sort.mergeSort.MergeSort;
 import com.example.dataStructure.tree.heap.binaryHeap.BinaryHeap;
 import com.example.dataStructure.tree.heap.binaryHeap.BinaryHeap2;
 import com.example.dataStructure.tree.heap.Heap;
@@ -27,6 +28,11 @@ public class Main {
         integerInsertSort.sort(arr);
         System.out.println("integerInsertSort = " + integerInsertSort);
 
+        Integer[] arr2 = {12, 4, 1, 2, 41, 0, 55, 6, 2};
+        MergeSort<Integer> mergeSort =new MergeSort<>();
+        mergeSort.sort(arr2);
+        System.out.println("mergeSort = " + mergeSort);
+
         BinaryHeap<Integer> heap = new BinaryHeap<>();
         heap.add(7);
         heap.add(72);
@@ -43,6 +49,7 @@ public class Main {
         heap2.add(12);
         heap2.add(22);
         System.out.println("heap = " + heap2);
+
 
     }
 }
