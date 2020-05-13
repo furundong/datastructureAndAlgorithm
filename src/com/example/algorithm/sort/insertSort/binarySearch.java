@@ -22,8 +22,4 @@ public class binarySearch {
         }
         return -1;
     }
-
-    public static int searchInsert(int[] arr, int value) {
-        return 0;
-    }
 }

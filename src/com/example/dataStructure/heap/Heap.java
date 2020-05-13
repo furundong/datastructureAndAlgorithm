@@ -1,4 +1,4 @@
-package com.example.dataStructure.tree.heap;
+package com.example.dataStructure.heap;
 
 public interface Heap<E> {
     int size(); //元素数量

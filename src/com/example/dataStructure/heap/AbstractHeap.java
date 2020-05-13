@@ -1,4 +1,4 @@
-package com.example.dataStructure.tree.heap;
+package com.example.dataStructure.heap;
 
 import java.util.Comparator;
 

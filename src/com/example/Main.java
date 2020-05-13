@@ -4,9 +4,9 @@ import com.example.algorithm.sort.bubbleSort.BubbleSort;
 import com.example.algorithm.sort.heapSort.HeapSort;
 import com.example.algorithm.sort.insertSort.InsertSort;
 import com.example.algorithm.sort.mergeSort.MergeSort;
-import com.example.dataStructure.tree.heap.binaryHeap.BinaryHeap;
-import com.example.dataStructure.tree.heap.binaryHeap.BinaryHeap2;
-import com.example.dataStructure.tree.heap.Heap;
+import com.example.dataStructure.heap.binaryHeap.BinaryHeap;
+import com.example.dataStructure.heap.binaryHeap.BinaryHeap2;
+import com.example.dataStructure.heap.Heap;
 
 public class Main {
 

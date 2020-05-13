@@ -1,6 +1,6 @@
-package com.example.dataStructure.tree.heap.binaryHeap;
+package com.example.dataStructure.heap.binaryHeap;
 
-import com.example.dataStructure.tree.heap.AbstractHeap;
+import com.example.dataStructure.heap.AbstractHeap;
 
 import java.util.Arrays;
 import java.util.Comparator;
