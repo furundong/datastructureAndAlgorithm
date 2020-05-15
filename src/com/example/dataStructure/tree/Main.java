@@ -3,13 +3,14 @@ package com.example.dataStructure.tree;
 import com.example.dataStructure.tree.BT.AVLTree;
 import com.example.dataStructure.tree.BT.BST;
 import com.example.dataStructure.tree.BT.BT;
+import com.example.dataStructure.tree.BT.RBTree;
 import com.example.dataStructure.tree.printer.BinaryTrees;
 
 /**
  * create by Freedom on 2020/5/12
  */
 public class Main {
-    public static void main1(String[] args) {
+    public static void main(String[] args) {
         BST<Integer> tree = new BST<>();
 
         tree.add(3);
@@ -28,9 +29,13 @@ public class Main {
                 return false;
             }
         });
+        BinaryTrees.println(tree);
+
         System.out.println("==========================================================================================");
 
-        tree.invertTree((BT.Node<Integer>) tree.root());
+        tree.invertTree();
+        BinaryTrees.println(tree);
+
         tree.preOrder(new BT.Visitor<Integer>() {
             @Override
             protected boolean visit(Integer element) {
@@ -45,8 +50,8 @@ public class Main {
         System.out.println("i = " + i);
     }
 
-    public static void main(String[] args) {
-        BST<Integer> avlTree = new AVLTree<>();
+    public static void main2(String[] args) {
+        AVLTree<Integer> avlTree = new AVLTree<>();
         avlTree.add(13);
         avlTree.add(14);
         avlTree.add(15);
@@ -58,6 +63,21 @@ public class Main {
         avlTree.remove(13);
         BinaryTrees.println(avlTree);
 
+    }
+
+    public static void main3(String[] args) {
+
+        RBTree<Integer> tree = new RBTree<>();
+        tree.add(14);
+        tree.add(17);
+        tree.add(15);
+        tree.add(18);
+        tree.add(8);
+        tree.add(11);
+        tree.add(22);
+        tree.add(1);
+
+        BinaryTrees.println(tree);
     }
 
 }

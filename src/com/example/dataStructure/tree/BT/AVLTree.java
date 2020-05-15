@@ -45,6 +45,7 @@ public class AVLTree<E extends Comparable> extends BBST<E> {
 
     /**
      * 回复失衡节点
+     *
      * @param grand 失衡节点
      */
     private void reBalance(Node<E> grand) {
@@ -67,41 +68,9 @@ public class AVLTree<E extends Comparable> extends BBST<E> {
         }
     }
 
-    private void rotateLeft(Node<E> grand) {
-        Node<E> parent = grand.right;
-        Node<E> child = parent.left; //根据旋转，这里的left 是需要RL 。 就是双旋才需要
-        grand.right = child;
-        parent.left = grand;
-        afterRotate(grand, parent, child);
-    }
-
-    private void rotateRight(Node<E> grand) {
-        Node<E> parent = grand.left;
-        Node<E> child = parent.right;
-        grand.left = child;
-        parent.right = grand;
-        afterRotate(grand, parent, child);
-    }
-
-    private void afterRotate(Node<E> grand,Node<E> parent,Node<E> child){
-        // 让parent称为子树的根节点
-        parent.parent = grand.parent;
-        if (grand.isLeftChild()) {
-            grand.parent.left = parent;
-        } else if (grand.isRightChild()) {
-            grand.parent.right = parent;
-        } else { // grand是root节点
-            root = parent;
-        }
-
-        // 更新child的parent
-        if (child != null) {
-            child.parent = grand;
-        }
-
-        // 更新grand的parent
-        grand.parent = parent;
-
+    @Override
+    protected void afterRotate(Node<E> grand, Node<E> parent, Node<E> child) {
+        super.afterRotate(grand, parent, child);
         // 更新高度
         updateHeight(grand);
         updateHeight(parent);
@@ -109,11 +78,12 @@ public class AVLTree<E extends Comparable> extends BBST<E> {
 
     /**
      * 恢复平衡
+     *
      * @param grand 高度最低的那个不平衡节点
      */
     private void rebalance(Node<E> grand) {
-        Node<E> parent = ((AVLNode<E>)grand).tallerChild();
-        Node<E> node = ((AVLNode<E>)parent).tallerChild();
+        Node<E> parent = ((AVLNode<E>) grand).tallerChild();
+        Node<E> node = ((AVLNode<E>) parent).tallerChild();
         if (parent.isLeftChild()) { // L
             if (node.isLeftChild()) { // LL
                 rotate(grand, node, node.right, parent, parent.right, grand);
@@ -129,40 +99,12 @@ public class AVLTree<E extends Comparable> extends BBST<E> {
         }
     }
 
-    private void rotate(
-            Node<E> r, // 子树的根节点
-            Node<E> b, Node<E> c,
-            Node<E> d,
-            Node<E> e, Node<E> f) {
-        // 让d成为这棵子树的根节点
-        d.parent = r.parent;
-        if (r.isLeftChild()) {
-            r.parent.left = d;
-        } else if (r.isRightChild()) {
-            r.parent.right = d;
-        } else {
-            root = d;
-        }
-
-        //b-c
-        b.right = c;
-        if (c != null) {
-            c.parent = b;
-        }
+    @Override
+    protected void rotate(Node<E> r, Node<E> b, Node<E> c, Node<E> d, Node<E> e, Node<E> f) {
+        super.rotate(r, b, c, d, e, f);
+        // 更新高度
         updateHeight(b);
-
-        // e-f
-        f.left = e;
-        if (e != null) {
-            e.parent = f;
-        }
         updateHeight(f);
-
-        // b-d-f
-        d.left = b;
-        d.right = f;
-        b.parent = d;
-        f.parent = d;
         updateHeight(d);
     }
 
@@ -172,12 +114,12 @@ public class AVLTree<E extends Comparable> extends BBST<E> {
 
 
     private boolean isBalanced(Node<E> node) {
-        return Math.abs(((AVLTree.AVLNode<E>)node).balanceFactor()) <= 1;
+        return Math.abs(((AVLTree.AVLNode<E>) node).balanceFactor()) <= 1;
     }
 
     @Override
     protected Node<E> createNode(E element, Node<E> parent) {
-        return new AVLNode<>(element,parent);
+        return new AVLNode<>(element, parent);
     }
 
     private static class AVLNode<E> extends Node<E> {
@@ -215,5 +157,15 @@ public class AVLTree<E extends Comparable> extends BBST<E> {
             }
             return element + "_p(" + parentString + ")_h(" + height + ")";
         }
+    }
+
+    @Override
+    public Object string(Object node) {
+        AVLNode<E> myNode = (AVLNode<E>)node;
+        String parentString = "null";
+        if (myNode.parent != null) {
+            parentString = myNode.parent.element.toString();
+        }
+        return myNode.element + "_p(" + parentString + ")_h(" + myNode.height + ")";
     }
 }

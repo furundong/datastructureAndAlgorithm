@@ -24,7 +24,7 @@ public class BT<E extends Comparable> implements BinaryTreeInfo {
 
     public void preOrder(Visitor<E> visitor) {
         if (visitor == null) return;
-        preOrder(root,visitor);
+        preOrder(root, visitor);
     }
 
     private void preOrder(Node<E> root, Visitor<E> visitor) {
@@ -32,8 +32,8 @@ public class BT<E extends Comparable> implements BinaryTreeInfo {
 
 //        System.out.println("root.element = " + root.element); //中，左，右
         visitor.stop = visitor.visit(root.element);
-        preOrder(root.left,visitor);
-        preOrder(root.right,visitor);
+        preOrder(root.left, visitor);
+        preOrder(root.right, visitor);
     }
 
     public void inorder(Visitor<E> visitor) {
@@ -69,14 +69,14 @@ public class BT<E extends Comparable> implements BinaryTreeInfo {
         Queue<Node<E>> queue = new LinkedList<>();
         queue.offer(root);
 
-        while (!queue.isEmpty()){
+        while (!queue.isEmpty()) {
             Node<E> node = queue.poll();
             if (visitor.visit(node.element)) return;
 
-            if(node.left !=null)
+            if (node.left != null)
                 queue.offer(node.left);
 
-            if(node.right != null)
+            if (node.right != null)
                 queue.offer(node.right);
         }
     }
@@ -108,8 +108,12 @@ public class BT<E extends Comparable> implements BinaryTreeInfo {
         return true;
     }
 
-    public Node<E> invertTree(Node<E> root)
-    {
+    public void invertTree() {
+        invertTree(root);
+    }
+
+    //翻转树
+    private Node<E> invertTree(Node<E> root) {
         if (root == null) return null;
         Node<E> tmp = root.left;
         root.left = invertTree(root.right);
@@ -274,17 +278,17 @@ public class BT<E extends Comparable> implements BinaryTreeInfo {
 
     @Override
     public Object left(Object node) {
-        return ((Node<E>)node).left;
+        return ((Node<E>) node).left;
     }
 
     @Override
     public Object right(Object node) {
-        return ((Node<E>)node).right;
+        return ((Node<E>) node).right;
     }
 
     @Override
     public Object string(Object node) {
-        Node<E> myNode = (Node<E>)node;
+        Node<E> myNode = (Node<E>) node;
         String parentString = "null";
         if (myNode.parent != null) {
             parentString = myNode.parent.element.toString();
@@ -305,6 +309,6 @@ public class BT<E extends Comparable> implements BinaryTreeInfo {
         if (comparator != null) {
             return comparator.compare(e1, e2);
         }
-        return ((Comparable<E>)e1).compareTo(e2); // 如果el，没有实现comparable或者自己实现comparator，就会报错
+        return ((Comparable<E>) e1).compareTo(e2); // 如果el，没有实现comparable或者自己实现comparator，就会报错
     }
 }

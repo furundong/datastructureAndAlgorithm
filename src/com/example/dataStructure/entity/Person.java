@@ -1,5 +1,7 @@
 package com.example.dataStructure.entity;
 
+import java.util.Objects;
+
 /**
  * create by Freedom on 2020/5/12
  */
@@ -26,5 +28,19 @@ public class Person implements Comparable {
     @Override
     public int compareTo(Object o) {
         return 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Person)) return false;
+        Person person = (Person) o;
+        return Objects.equals(getName(), person.getName()) &&
+                Objects.equals(getAge(), person.getAge());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName(), getAge());
     }
 }

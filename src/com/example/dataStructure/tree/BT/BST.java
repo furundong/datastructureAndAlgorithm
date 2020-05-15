@@ -21,6 +21,9 @@ public class BST<E extends Comparable> extends BT<E> {
         if (root == null) {
             root = createNode(element, null);
             size++;
+
+            // 新添加节点之后的处理
+            afterAdd(root);
             return;
         }
 
