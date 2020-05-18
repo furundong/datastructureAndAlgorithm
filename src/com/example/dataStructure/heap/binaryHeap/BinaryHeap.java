@@ -23,9 +23,7 @@ public class BinaryHeap<E> extends AbstractHeap<E> {
             size = elements.length;
             int capacity = Math.max(elements.length, DEFAULT_CAPACITY);
             this.elements = (E[]) new Object[capacity];
-            for (int i = 0; i < elements.length; i++) {
-                this.elements[i] = elements[i];
-            }
+            System.arraycopy(elements, 0, this.elements, 0, elements.length);
             heapify();
         }
     }
@@ -38,7 +36,7 @@ public class BinaryHeap<E> extends AbstractHeap<E> {
 //        }
 
         //自下而上的下滤  O（n）
-        for (int i = (size >> 1) - 1; i >= 0; i++) { //从非叶子节点的index开始,-1是最后一个index
+        for (int i = (size >> 1) - 1; i >= 0; i--) { //从非叶子节点的index开始,-1是最后一个index。 (size >> 1) - 1是非叶子节点，这里只需要对非叶子节点
             siftDown(i);
         }
     }
@@ -69,7 +67,7 @@ public class BinaryHeap<E> extends AbstractHeap<E> {
         ensureCapacity(size + 1);
 
         elements[size++] = element;
-        siftUp(size - 1); //最后一个索引数据
+        siftUp(size - 1); //最后一个索引数据，这个操作是上滤。时间复杂度为 O(log n)
     }
 
     @Override
@@ -108,7 +106,7 @@ public class BinaryHeap<E> extends AbstractHeap<E> {
 
     private void siftDown(int index) {
         E e = elements[index];
-        int half = size >> 1;//非叶子节点的数量。
+        int half = size >> 1;//非叶子节点的数量。   叶子节点的个数为（n+1）/2
         while (index < half) { //只要保证index不是叶子节点, 必要index小于非叶子节点的数量就可以了。这个就是全部非叶子节点索引
             //index只有左子节点，
             //index有左有右
@@ -139,7 +137,7 @@ public class BinaryHeap<E> extends AbstractHeap<E> {
     private void siftUp(int index) {
         E e = elements[index];
         while (index > 0) { //说明这个值有父节点，二叉堆的父节点是 index-1)/2
-            int parent = (index - 1) >> 1;
+            int parent = (index - 1) >> 1; // 父节点的index位置
             E p = elements[parent];
             if (compare(e, p) <= 0) return;
 
