@@ -11,14 +11,14 @@ public class InsertSort3<T extends Comparable<T>> extends Sort<T> {
     protected void sort() {
         for (int source = 1; source < array.length; source++) {
             T t = array[source];
-            int insert = searchInsert(source);
-//            for (int i = source; i > insert; i--) {
+            int insertIndex = searchInsert(source);
+//            for (int i = source; i > insertIndex; i--) {
 //                array[i] = array[i - 1];
 //            }
-            if (insert < source) {
-                System.arraycopy(array, insert, array, insert + 1, source - insert);
+            if (insertIndex < source) {
+                System.arraycopy(array, insertIndex, array, insertIndex + 1, source - insertIndex);
             }
-            array[source] = t;
+            array[insertIndex] = t;
         }
     }
 

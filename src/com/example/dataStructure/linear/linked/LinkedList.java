@@ -5,7 +5,7 @@ import com.example.dataStructure.linear.AbstractList;
 /**
  * create by Freedom on 2020/5/15
  *
- * java是双向链表
+ * java是双向链表，不是循环链表。
  */
 public class LinkedList<E> extends AbstractList<E> {
     private Node<E> first;

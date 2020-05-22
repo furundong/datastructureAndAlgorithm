@@ -5,7 +5,7 @@ import com.example.algorithm.sort.Sort;
 public class MergeSort<T extends Comparable<T>> extends Sort<T> {
 
     //创建一个中间得临时空间，大小是array得一半
-    T[] leftArray;
+    private T[] leftArray;
 
     @Override
     protected void sort() {
@@ -21,10 +21,10 @@ public class MergeSort<T extends Comparable<T>> extends Sort<T> {
         int mid = (begin + end) >> 1;
         sort(begin, mid);
         sort(mid, end);
-        meger(begin, mid, end);
+        merge(begin, mid, end);
     }
 
-    private void meger(int begin, int mid, int end) {
+    private void merge(int begin, int mid, int end) {
         int li = 0, le = mid - begin; //左边数组（基于leftArray)
         int ri = mid, re = end;//右边数组（基于array）
         int ai = begin;//  array得索引
