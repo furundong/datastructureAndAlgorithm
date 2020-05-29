@@ -18,7 +18,6 @@ package com.example.dataStructure.tree.printer;
  └──12
     └──9
  
- * @author MJ Lee
  *
  */
 public class InorderPrinter extends Printer {

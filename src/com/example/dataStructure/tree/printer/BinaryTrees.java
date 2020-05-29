@@ -2,7 +2,6 @@ package com.example.dataStructure.tree.printer;
 
 /**
  * 
- * @author MJ Lee
  *
  */
 public final class BinaryTrees {

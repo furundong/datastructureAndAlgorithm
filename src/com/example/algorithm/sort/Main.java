@@ -1,4 +1,4 @@
-package com.example.algorithm;
+package com.example.algorithm.sort;
 
 import com.example.algorithm.sort.quickSort.QuickSort;
 

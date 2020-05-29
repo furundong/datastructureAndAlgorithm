@@ -8,9 +8,11 @@ import com.example.dataStructure.heap.binaryHeap.BinaryHeap;
 import com.example.dataStructure.heap.binaryHeap.BinaryHeap2;
 import com.example.dataStructure.heap.Heap;
 
+import java.util.Arrays;
+
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main1(String[] args) {
         // write your code here
         Integer[] arrays = {12, 4, 1, 2, 41, 0, 55, 6, 2};
         BubbleSort<Integer> bubbleSort = new BubbleSort<>();
@@ -51,5 +53,16 @@ public class Main {
         System.out.println("heap = " + heap2);
 
 
+    }
+
+    public static void main(String[] args) {
+
+        String regex = "^,*|,*$";
+        String replaceAll = ",,,12421,4141,,,".replaceAll(regex, "");
+        System.out.println("replaceAll = " + replaceAll);
+
+        final int[] i = {1,23,4,5};
+        i[1]+=2;
+        System.out.println("i = " + Arrays.toString(i));
     }
 }

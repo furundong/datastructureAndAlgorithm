@@ -3,6 +3,7 @@ package com.example.dataStructure.heap.binaryHeap;
 import com.example.dataStructure.heap.AbstractHeap;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 
 /**
@@ -12,6 +13,37 @@ import java.util.Comparator;
 public class BinaryHeap2<E> extends AbstractHeap<E> {
     private E[] elements;
     private static final int DEFAULT_CAPACITY = 10;
+
+    public BinaryHeap2(Comparator<E> comparator, E[] elements) {
+        super(comparator);
+        if (elements == null || elements.length == 0) {
+            this.elements = (E[]) new Object[DEFAULT_CAPACITY];
+        } else {
+//            this.elements = elements; 这样写是浅拷贝，同一个地址。
+            size = elements.length;
+            int capacity = Math.max(elements.length, DEFAULT_CAPACITY);
+            this.elements = (E[]) new Object[capacity];
+            System.arraycopy(elements, 0, this.elements, 0, elements.length);
+            heapify();
+        }
+    }
+
+    public BinaryHeap2(Collection<E> elements, Comparator<E> comparator) {
+        super(comparator);
+
+        size = elements == null ? 0 : elements.size();
+        if (size == 0) {
+            this.elements = (E[]) new Object[DEFAULT_CAPACITY];
+        } else {
+            int capacity = Math.max(size, DEFAULT_CAPACITY);
+            this.elements = (E[]) new Object[capacity];
+            int i = 0;
+            for (E element : elements) {
+                this.elements[i++] = element;
+            }
+            heapify();
+        }
+    }
 
     public BinaryHeap2(Comparator<E> comparator) {
         super(comparator);
@@ -76,13 +108,13 @@ public class BinaryHeap2<E> extends AbstractHeap<E> {
 //            int rightChildIndex = (index << 1) + 2;
             int rightChildIndex = leftChildIndex + 1;
 
-            if (rightChildIndex < size && compare(elements[rightChildIndex],leftChild)>0){ //右边比左边大
+            if (rightChildIndex < size && compare(elements[rightChildIndex], leftChild) < 0) { //右边比左边大
 //                leftChildIndex = rightChildIndex;
 //                leftChild = elements[rightChildIndex];
                 leftChild = elements[leftChildIndex = rightChildIndex];
             }
 
-            if (compare(e, leftChild) >= 0) break;
+            if (compare(e, leftChild) <= 0) break;
 
             //将子节点存放在index位置
             elements[index] = leftChild;
@@ -97,7 +129,7 @@ public class BinaryHeap2<E> extends AbstractHeap<E> {
         while (index > 0) { //说明这个值有父节点，二叉堆的父节点是 index-1)/2
             int parentIndex = (index - 1) >> 1;
             E p = elements[parentIndex];
-            if (compare(e, p) <= 0) break;
+            if (compare(e, p) >= 0) break;
 
             //将父元素存储在index位置。
             elements[index] = p;
@@ -136,6 +168,18 @@ public class BinaryHeap2<E> extends AbstractHeap<E> {
         System.out.println("oldCapacity = " + oldCapacity + " ensure to " + newCapacity);
     }
 
+    //批量建堆
+    private void heapify() {
+        //自上而下的上滤, 效率nlogn
+//        for (int i = 1; i < size; i++) {
+//            siftUp(i);
+//        }
+
+        //自下而上的下滤  O（n）
+        for (int i = (size >> 1) - 1; i >= 0; i--) { //从非叶子节点的index开始,-1是最后一个index。 (size >> 1) - 1是非叶子节点，这里只需要对非叶子节点
+            siftDown(i);
+        }
+    }
 
     @Override
     public String toString() {
