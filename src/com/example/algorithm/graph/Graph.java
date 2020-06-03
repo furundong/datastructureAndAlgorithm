@@ -1,7 +1,6 @@
 package com.example.algorithm.graph;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public abstract class Graph<V, E> {
     protected WeightManager<E> weightManager;
@@ -31,7 +30,9 @@ public abstract class Graph<V, E> {
 
     public abstract List<V> topologicalSort();
 
-    public abstract Set<E> mst();
+    public abstract Set<EdgeInfo<V, E>> mst();
+
+    public abstract Map<V, E> shortestPath(V begin);
 
     public abstract void removeVertex(V v);
 
@@ -50,36 +51,41 @@ public abstract class Graph<V, E> {
         boolean visit(V v);
     }
 
+    /**
+     * 边的信息
+     * @param <V> 顶点信息
+     * @param <E> 权值
+     */
     public static class EdgeInfo<V, E> {
-        private V from;
-        private V to;
-        private E weight;
+        protected V from;
+        protected V to;
+        protected E weight;
         public EdgeInfo(V from, V to, E weight) {
             this.from = from;
             this.to = to;
             this.weight = weight;
         }
-        public V getFrom() {
-            return from;
+        @Override
+        public String toString() {
+            return "EdgeInfo [from=" + from + ", to=" + to + ", weight=" + weight + "]";
         }
-        public void setFrom(V from) {
-            this.from = from;
-        }
-        public V getTo() {
-            return to;
-        }
-        public void setTo(V to) {
-            this.to = to;
-        }
-        public E getWeight() {
-            return weight;
-        }
-        public void setWeight(E weight) {
+    }
+
+    /**
+     * 路径信息
+     * @param <V>
+     * @param <E>
+     */
+    public static class PathInfo<V, E> {
+        protected E weight;
+        protected List<EdgeInfo<V, E>> edgeInfos = new LinkedList<>();
+        public PathInfo() {}
+        public PathInfo(E weight) {
             this.weight = weight;
         }
         @Override
         public String toString() {
-            return "EdgeInfo [from=" + from + ", to=" + to + ", weight=" + weight + "]";
+            return "PathInfo [weight=" + weight + ", edgeInfos=" + edgeInfos + "]";
         }
     }
 }

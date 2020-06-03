@@ -4,6 +4,7 @@ import com.example.dataStructure.heap.AbstractHeap;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Set;
 
 /**
  * create by Freedom on 2020/4/26
@@ -51,6 +52,14 @@ public class BinaryHeap<E> extends AbstractHeap<E> {
 
     public BinaryHeap() {
         this(null, null);
+    }
+
+    @Override
+    public Integer addAll(Set<E> set) {
+        for (E e1 : set) {
+            add(e1);
+        }
+        return set.size();
     }
 
     @Override

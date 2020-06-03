@@ -4,11 +4,11 @@ import com.example.algorithm.sort.bubbleSort.BubbleSort;
 import com.example.algorithm.sort.heapSort.HeapSort;
 import com.example.algorithm.sort.insertSort.InsertSort;
 import com.example.algorithm.sort.mergeSort.MergeSort;
+import com.example.dataStructure.heap.Heap;
 import com.example.dataStructure.heap.binaryHeap.BinaryHeap;
 import com.example.dataStructure.heap.binaryHeap.BinaryHeap2;
-import com.example.dataStructure.heap.Heap;
 
-import java.util.Arrays;
+import java.util.*;
 
 public class Main {
 
@@ -57,12 +57,15 @@ public class Main {
 
     public static void main(String[] args) {
 
-        String regex = "^,*|,*$";
-        String replaceAll = ",,,12421,4141,,,".replaceAll(regex, "");
-        System.out.println("replaceAll = " + replaceAll);
-
-        final int[] i = {1,23,4,5};
-        i[1]+=2;
-        System.out.println("i = " + Arrays.toString(i));
+        Map<String, Integer> map = new HashMap<>();
+        map.put("1", 8);
+        map.put("2", 12);
+        map.put("3", 53);
+        map.put("4", 33);
+        map.put("5", 11);
+        map.put("6", 3);
+        map.put("7", 3);
+        List<Map.Entry<String,Integer>> list = new ArrayList<>(map.entrySet());
+        list.sort(Comparator.comparingInt(Map.Entry::getValue));
     }
 }

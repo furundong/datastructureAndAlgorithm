@@ -1,5 +1,6 @@
 package com.example.algorithm.graph;
 
+import com.example.algorithm.union.GenericUnionFind;
 import com.example.dataStructure.heap.binaryHeap.BinaryHeap2;
 
 import java.util.*;
@@ -21,10 +22,10 @@ public class ListGraph<V, E> extends Graph<V, E> {
     public ListGraph(WeightManager<E> weightManager) {
         super(weightManager);
     }
-    
-    public void print(){
+
+    public void print() {
         System.out.println("顶点：-------------------------------");
-        vertices.forEach((V v,Vertex<V,E> vertex) -> {
+        vertices.forEach((V v, Vertex<V, E> vertex) -> {
             System.out.println(v);
             System.out.println("out-----------");
             System.out.println(vertex.outEdges);
@@ -48,13 +49,13 @@ public class ListGraph<V, E> extends Graph<V, E> {
 
     @Override
     public void addVertex(V v) {
-        if(vertices.containsKey(v)) return;
-        vertices.put(v,new Vertex<>(v));
+        if (vertices.containsKey(v)) return;
+        vertices.put(v, new Vertex<>(v));
     }
 
     @Override
     public void addEdge(V from, V to) {
-        addEdge(from, to,null);
+        addEdge(from, to, null);
     }
 
     @Override
@@ -88,7 +89,7 @@ public class ListGraph<V, E> extends Graph<V, E> {
         Vertex<V, E> vertex = vertices.remove(v);
         if (vertex == null) return;
 
-        for (Iterator<Edge<V, E>> iterator = vertex.outEdges.iterator(); iterator.hasNext();) {
+        for (Iterator<Edge<V, E>> iterator = vertex.outEdges.iterator(); iterator.hasNext(); ) {
             Edge<V, E> edge = iterator.next();
             edge.to.inEdges.remove(edge);
             // 将当前遍历到的元素edge从集合vertex.outEdges中删掉
@@ -96,7 +97,7 @@ public class ListGraph<V, E> extends Graph<V, E> {
             edges.remove(edge);
         }
 
-        for (Iterator<Edge<V, E>> iterator = vertex.inEdges.iterator(); iterator.hasNext();) {
+        for (Iterator<Edge<V, E>> iterator = vertex.inEdges.iterator(); iterator.hasNext(); ) {
             Edge<V, E> edge = iterator.next();
             edge.from.outEdges.remove(edge);
             // 将当前遍历到的元素edge从集合vertex.inEdges中删掉
@@ -120,8 +121,11 @@ public class ListGraph<V, E> extends Graph<V, E> {
         }
     }
 
-
-
+    /**
+     * 广度优先搜索
+     * @param begin
+     * @param visitor
+     */
     @Override
     public void bfs(V begin, VertexVisitor<V> visitor) {
         if (visitor == null) return;
@@ -224,8 +228,8 @@ public class ListGraph<V, E> extends Graph<V, E> {
     }
 
     @Override
-    public Set<E> mst() {
-        return null;
+    public Set<EdgeInfo<V, E>> mst() {
+        return kruskal() == null ? prim() : null;
     }
 
     private Set<EdgeInfo<V, E>> prim() {
@@ -237,7 +241,7 @@ public class ListGraph<V, E> extends Graph<V, E> {
         Set<EdgeInfo<V, E>> edgeInfos = new HashSet<>(); //存放最小生成树的边信息
         Set<Vertex<V, E>> addedVertices = new HashSet<>(); //存放最小树的顶点信息
         addedVertices.add(vertex);
-        BinaryHeap2<Edge<V, E>> heap = new BinaryHeap2<>(vertex.outEdges,edgeComparator); //里面就是最小边信息
+        BinaryHeap2<Edge<V, E>> heap = new BinaryHeap2<>(vertex.outEdges, edgeComparator); //里面就是最小边信息
 
         int verticesSize = vertices.size();
         while (!heap.isEmpty() && addedVertices.size() < verticesSize) {
@@ -249,6 +253,72 @@ public class ListGraph<V, E> extends Graph<V, E> {
         }
         return edgeInfos;
 
+    }
+
+    private Set<EdgeInfo<V, E>> kruskal() {
+        int edgeSize = vertices.size() - 1;
+        if (edgeSize == -1) return null;
+        Set<EdgeInfo<V, E>> edgeInfos = new HashSet<>();
+        BinaryHeap2<Edge<V, E>> heap = new BinaryHeap2<>(edges, edgeComparator);
+        GenericUnionFind<Vertex<V, E>> uf = new GenericUnionFind<>();
+        vertices.forEach((V v, Vertex<V, E> vertex) -> {
+            uf.makeSet(vertex);  //所有得顶点都单独得成为一个集合。
+        });
+        while (!heap.isEmpty() && edgeInfos.size() < edgeSize) {
+            Edge<V, E> edge = heap.remove();
+            if (uf.isSame(edge.from, edge.to)) continue; //本身就在同一个集合
+            edgeInfos.add(edge.info());
+            uf.union(edge.from, edge.to);
+        }
+        return edgeInfos;
+    }
+
+    @Override
+    public Map<V, E> shortestPath(V begin) {
+        Vertex<V, E> beginVertex = vertices.get(begin);
+        if (beginVertex == null) return null;
+
+        Map<V, E> selectedPaths = new HashMap<>();//存放已经拉起来的vertex的value，以及权重
+        selectedPaths.put(beginVertex.value,null); //一开始拉起来的，也算自己本身。 如果你不想要，就在最后return的时候删除
+        Map<Vertex<V, E>, E> paths = new HashMap<>(); //存放的是还没有拉起来的vertex
+        // 初始化paths
+        for (Edge<V, E> edge : beginVertex.outEdges) {
+            paths.put(edge.to, edge.weight);
+        }
+
+        while (!paths.isEmpty()) {
+            Map.Entry<Vertex<V, E>, E> minEntry = getMinPath(paths); //paths里面最小的vertex以及权重
+            // minVertex离开桌面
+            Vertex<V, E> minVertex = minEntry.getKey();
+            selectedPaths.put(minVertex.value, minEntry.getValue());
+            paths.remove(minVertex);
+            // 对它的minVertex的outEdges进行松弛操作
+            for (Edge<V, E> edge : minVertex.outEdges) {
+                // 如果edge.to已经离开桌面，就没必要进行松弛操作
+                if (selectedPaths.containsKey(edge.to.value)) continue; //有些你想松弛的边是他的outEdges，但是已经被拉起来了。 换句话说，这条边不是最短路径
+                // 新的可选择的最短路径：beginVertex到edge.from的最短路径 + edge.weight
+                E newWeight = weightManager.add(minEntry.getValue(), edge.weight);
+                // 以前的最短路径：beginVertex到edge.to的最短路径
+                E oldWeight = paths.get(edge.to); //有可能这个vertex一开始就没有，这个outEdges连过去的，那么这个oldWeight就会为null
+                if (oldWeight == null || weightManager.compare(newWeight, oldWeight) < 0) {
+                    paths.put(edge.to, newWeight);
+                }
+            }
+        }
+
+        selectedPaths.remove(begin); //在进行松弛操作的时候，出发顶点的删掉
+        return selectedPaths;
+    }
+
+    /**
+     *从paths中挑一个最小的路径出来
+     * @param paths
+     * @return
+     */
+    private Map.Entry<Vertex<V, E>, E> getMinPath(Map<Vertex<V, E>, E> paths) {
+        ArrayList<Map.Entry<Vertex<V, E>, E>> list = new ArrayList<>(paths.entrySet());
+        list.sort((o1, o2) -> (weightManager.compare(o1.getValue(),o2.getValue())));
+        return list.get(0);
     }
 
     private static class Vertex<V, E> {
@@ -289,6 +359,10 @@ public class ListGraph<V, E> extends Graph<V, E> {
         Edge(Vertex<V, E> from, Vertex<V, E> to) {
             this.from = from;
             this.to = to;
+        }
+
+        EdgeInfo<V, E> info() {
+            return new EdgeInfo<>(from.value, to.value, weight);
         }
 
         @Override
