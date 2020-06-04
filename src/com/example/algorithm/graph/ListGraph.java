@@ -123,8 +123,9 @@ public class ListGraph<V, E> extends Graph<V, E> {
 
     /**
      * 广度优先搜索
-     * @param begin
-     * @param visitor
+     *
+     * @param begin   开始节点
+     * @param visitor 访问者
      */
     @Override
     public void bfs(V begin, VertexVisitor<V> visitor) {
@@ -229,7 +230,7 @@ public class ListGraph<V, E> extends Graph<V, E> {
 
     @Override
     public Set<EdgeInfo<V, E>> mst() {
-        return kruskal() == null ? prim() : null;
+        return kruskal() == null ? null : prim();
     }
 
     private Set<EdgeInfo<V, E>> prim() {
@@ -252,7 +253,6 @@ public class ListGraph<V, E> extends Graph<V, E> {
             heap.addAll(edge.to.outEdges);
         }
         return edgeInfos;
-
     }
 
     private Set<EdgeInfo<V, E>> kruskal() {
@@ -274,6 +274,202 @@ public class ListGraph<V, E> extends Graph<V, E> {
     }
 
     @Override
+    public Map<V, PathInfo<V, E>> shortestPath(V begin) {
+        return bellmanFord(begin) == null ? null : dijkstra(begin);
+    }
+
+    private Map<V, PathInfo<V, E>> bellmanFord(V begin) {
+        Vertex<V, E> beginVertex = vertices.get(begin);
+        if (beginVertex == null) return null;
+
+        Map<V, PathInfo<V, E>> selectedPaths = new HashMap<>();
+        selectedPaths.put(begin, new PathInfo<>(weightManager.zero()));
+
+        int count = vertices.size() - 1;
+        for (int i = 0; i < count; i++) { // v - 1 次
+            for (Edge<V, E> edge : edges) {
+                PathInfo<V, E> fromPath = selectedPaths.get(edge.from.value);
+                if (fromPath == null) continue;
+                relax(edge, fromPath, selectedPaths);
+            }
+        }
+
+        for (Edge<V, E> edge : edges) {
+            PathInfo<V, E> fromPath = selectedPaths.get(edge.from.value);
+            if (fromPath == null) continue;
+            if (relax(edge, fromPath, selectedPaths)) {
+                System.out.println("有负权环");
+                return null;
+            }
+        }
+
+        selectedPaths.remove(begin);
+        return selectedPaths;
+    }
+
+    private Map<V, PathInfo<V, E>> dijkstra(V begin) {
+        Vertex<V, E> beginVertex = vertices.get(begin);
+        if (beginVertex == null) return null;
+
+        Map<V, PathInfo<V, E>> selectedPaths = new HashMap<>();
+        Map<Vertex<V, E>, PathInfo<V, E>> paths = new HashMap<>();
+        paths.put(beginVertex, new PathInfo<>(weightManager.zero()));
+        // 初始化paths
+//		for (Edge<V, E> edge : beginVertex.outEdges) {
+//			PathInfo<V, E> path = new PathInfo<>();
+//			path.weight = edge.weight;
+//			path.edgeInfos.add(edge.info());
+//			paths.put(edge.to, path);
+//		}
+
+        while (!paths.isEmpty()) {
+            Map.Entry<Vertex<V, E>, PathInfo<V, E>> minEntry = getMinPath(paths);
+            // minVertex离开桌面
+            Vertex<V, E> minVertex = minEntry.getKey();
+            PathInfo<V, E> minPath = minEntry.getValue();
+            selectedPaths.put(minVertex.value, minPath);
+            paths.remove(minVertex);
+            // 对它的minVertex的outEdges进行松弛操作
+            for (Edge<V, E> edge : minVertex.outEdges) {
+                // 如果edge.to已经离开桌面，就没必要进行松弛操作
+                if (selectedPaths.containsKey(edge.to.value)) continue;
+                relaxForDijkstra(edge, minPath, paths);
+            }
+        }
+
+        selectedPaths.remove(begin);
+        return selectedPaths;
+    }
+
+    /**
+     * 松弛
+     *
+     * @param edge     需要进行松弛的边
+     * @param fromPath edge的from的最短路径信息
+     * @param paths    存放着其他点（对于dijkstra来说，就是还没有离开桌面的点）的最短路径信息
+     */
+    private void relaxForDijkstra(Edge<V, E> edge, PathInfo<V, E> fromPath, Map<Vertex<V, E>, PathInfo<V, E>> paths) {
+        // 新的可选择的最短路径：beginVertex到edge.from的最短路径 + edge.weight
+        E newWeight = weightManager.add(fromPath.weight, edge.weight);
+        // 以前的最短路径：beginVertex到edge.to的最短路径
+        PathInfo<V, E> oldPath = paths.get(edge.to);
+        if (oldPath != null && weightManager.compare(newWeight, oldPath.weight) >= 0) return;
+
+        if (oldPath == null) {
+            oldPath = new PathInfo<>();
+            paths.put(edge.to, oldPath);
+        } else {
+            oldPath.edgeInfos.clear();//如果当前有边路径，那么就清空。  我的边路径可以从fromPath中取得。并将当前的edge添加进oldPath
+        }
+
+        oldPath.weight = newWeight;
+        oldPath.edgeInfos.addAll(fromPath.edgeInfos);
+        oldPath.edgeInfos.add(edge.info());
+    }
+
+    /**
+     * 从paths中挑一个最小的路径出来
+     *
+     * @param paths path存在路径
+     * @return 最小的路径
+     */
+    private Map.Entry<Vertex<V, E>, PathInfo<V, E>> getMinPath(Map<Vertex<V, E>, PathInfo<V, E>> paths) {
+        ArrayList<Map.Entry<Vertex<V, E>, PathInfo<V, E>>> list = new ArrayList<>(paths.entrySet());
+        list.sort((o1, o2) -> weightManager.compare(o1.getValue().weight, o2.getValue().weight));
+        return list.get(0);
+    }
+
+    /**
+     * 松弛
+     *
+     * @param edge     需要进行松弛的边
+     * @param fromPath edge的from的最短路径信息
+     * @param paths    存放着其他点（对于dijkstra来说，就是还没有离开桌面的点）的最短路径信息
+     */
+    private boolean relax(Edge<V, E> edge, PathInfo<V, E> fromPath, Map<V, PathInfo<V, E>> paths) {
+        // 新的可选择的最短路径：beginVertex到edge.from的最短路径 + edge.weight
+        E newWeight = weightManager.add(fromPath.weight, edge.weight);
+        // 以前的最短路径：beginVertex到edge.to的最短路径
+        PathInfo<V, E> oldPath = paths.get(edge.to.value);
+        if (oldPath != null && weightManager.compare(newWeight, oldPath.weight) >= 0) return false;
+
+        if (oldPath == null) {
+            oldPath = new PathInfo<>();
+            paths.put(edge.to.value, oldPath);
+        } else {
+            oldPath.edgeInfos.clear();
+        }
+
+        oldPath.weight = newWeight;
+        oldPath.edgeInfos.addAll(fromPath.edgeInfos);
+        oldPath.edgeInfos.add(edge.info());
+
+        return true;
+    }
+
+    //不支持负权环
+    @Override
+    public Map<V, Map<V, PathInfo<V, E>>> shortestPath() {
+        Map<V, Map<V, PathInfo<V, E>>> paths = new HashMap<>();
+        // 初始化，每个边的outEdges都加入到paths里面
+        for (Edge<V, E> edge : edges) {
+            Map<V, PathInfo<V, E>> map = paths.computeIfAbsent(edge.from.value, k -> new HashMap<>());
+
+        //edge.from.value起点信息
+        //map 是重点的信息，V是重点的顶点， pathInfo就是路径信息
+//      Map<V, PathInfo<V, E>> map = paths.get(edge.from.value);
+//            if (map == null) {
+//                map = new HashMap<>();
+//                paths.put(edge.from.value, map);
+//            }
+
+            PathInfo<V, E> pathInfo = new PathInfo<>(edge.weight);
+            pathInfo.edgeInfos.add(edge.info()); //这个顶点的路径信息。是个重点的信息
+            map.put(edge.to.value, pathInfo);
+        }
+
+        vertices.forEach((V v2, Vertex<V, E> vertex2) -> {
+            vertices.forEach((V v1, Vertex<V, E> vertex1) -> {
+                vertices.forEach((V v3, Vertex<V, E> vertex3) -> {
+                    if (v1.equals(v2) || v2.equals(v3) || v1.equals(v3)) return;
+
+                    // v1 -> v2
+                    PathInfo<V, E> path12 = getPathInfo(v1, v2, paths);
+                    if (path12 == null) return;
+
+                    // v2 -> v3
+                    PathInfo<V, E> path23 = getPathInfo(v2, v3, paths);
+                    if (path23 == null) return;
+
+                    // v1 -> v3
+                    PathInfo<V, E> path13 = getPathInfo(v1, v3, paths);
+
+                    E newWeight = weightManager.add(path12.weight, path23.weight);
+                    if (path13 != null && weightManager.compare(newWeight, path13.weight) >= 0) return;
+
+                    if (path13 == null) {
+                        path13 = new PathInfo<V, E>();
+                        paths.get(v1).put(v3, path13);
+                    } else {
+                        path13.edgeInfos.clear();
+                    }
+
+                    path13.weight = newWeight;
+                    path13.edgeInfos.addAll(path12.edgeInfos);
+                    path13.edgeInfos.addAll(path23.edgeInfos);
+                });
+            });
+        });
+
+        return paths;
+    }
+
+    private PathInfo<V, E> getPathInfo(V from, V to, Map<V, Map<V, PathInfo<V, E>>> paths) {
+        Map<V, PathInfo<V, E>> map = paths.get(from);
+        return map == null ? null : map.get(to);
+    }
+
+   /* @Override
     public Map<V, E> shortestPath(V begin) {
         Vertex<V, E> beginVertex = vertices.get(begin);
         if (beginVertex == null) return null;
@@ -309,17 +505,14 @@ public class ListGraph<V, E> extends Graph<V, E> {
         selectedPaths.remove(begin); //在进行松弛操作的时候，出发顶点的删掉
         return selectedPaths;
     }
+    */
 
-    /**
-     *从paths中挑一个最小的路径出来
-     * @param paths
-     * @return
-     */
+    /*
     private Map.Entry<Vertex<V, E>, E> getMinPath(Map<Vertex<V, E>, E> paths) {
         ArrayList<Map.Entry<Vertex<V, E>, E>> list = new ArrayList<>(paths.entrySet());
         list.sort((o1, o2) -> (weightManager.compare(o1.getValue(),o2.getValue())));
         return list.get(0);
-    }
+    }*/
 
     private static class Vertex<V, E> {
         V value;
