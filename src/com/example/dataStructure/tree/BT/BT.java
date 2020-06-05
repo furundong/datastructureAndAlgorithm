@@ -1,6 +1,6 @@
 package com.example.dataStructure.tree.BT;
 
-import com.example.dataStructure.tree.printer.BinaryTreeInfo;
+import com.example.utils.printer.BinaryTreeInfo;
 
 import java.util.Comparator;
 import java.util.LinkedList;

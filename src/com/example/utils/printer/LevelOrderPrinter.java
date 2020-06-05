@@ -1,4 +1,4 @@
-package com.example.dataStructure.tree.printer;
+package com.example.utils.printer;
 
 import java.util.ArrayList;
 import java.util.Collection;

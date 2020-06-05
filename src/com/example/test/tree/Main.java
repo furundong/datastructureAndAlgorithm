@@ -1,7 +1,7 @@
 package com.example.test.tree;
 
 
-import com.example.dataStructure.tree.printer.BinaryTrees;
+import com.example.utils.printer.BinaryTrees;
 
 @SuppressWarnings("unused")
 public class Main {

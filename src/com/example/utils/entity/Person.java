@@ -1,4 +1,4 @@
-package com.example.dataStructure.entity;
+package com.example.utils.entity;
 
 import java.util.Objects;
 

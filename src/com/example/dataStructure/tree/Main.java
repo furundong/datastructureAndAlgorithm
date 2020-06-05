@@ -4,7 +4,7 @@ import com.example.dataStructure.tree.BT.AVLTree;
 import com.example.dataStructure.tree.BT.BST;
 import com.example.dataStructure.tree.BT.BT;
 import com.example.dataStructure.tree.BT.RBTree;
-import com.example.dataStructure.tree.printer.BinaryTrees;
+import com.example.utils.printer.BinaryTrees;
 
 /**
  * create by Freedom on 2020/5/12

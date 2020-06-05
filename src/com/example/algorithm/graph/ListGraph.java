@@ -428,38 +428,36 @@ public class ListGraph<V, E> extends Graph<V, E> {
             map.put(edge.to.value, pathInfo);
         }
 
-        vertices.forEach((V v2, Vertex<V, E> vertex2) -> {
-            vertices.forEach((V v1, Vertex<V, E> vertex1) -> {
-                vertices.forEach((V v3, Vertex<V, E> vertex3) -> {
-                    if (v1.equals(v2) || v2.equals(v3) || v1.equals(v3)) return;
+        vertices.forEach((V v2, Vertex<V, E> vertex2) ->
+                vertices.forEach((V v1, Vertex<V, E> vertex1) ->
+                        vertices.forEach((V v3, Vertex<V, E> vertex3) -> {
+            if (v1.equals(v2) || v2.equals(v3) || v1.equals(v3)) return;
 
-                    // v1 -> v2
-                    PathInfo<V, E> path12 = getPathInfo(v1, v2, paths);
-                    if (path12 == null) return;
+            // v1 -> v2
+            PathInfo<V, E> path12 = getPathInfo(v1, v2, paths);
+            if (path12 == null) return;
 
-                    // v2 -> v3
-                    PathInfo<V, E> path23 = getPathInfo(v2, v3, paths);
-                    if (path23 == null) return;
+            // v2 -> v3
+            PathInfo<V, E> path23 = getPathInfo(v2, v3, paths);
+            if (path23 == null) return;
 
-                    // v1 -> v3
-                    PathInfo<V, E> path13 = getPathInfo(v1, v3, paths);
+            // v1 -> v3
+            PathInfo<V, E> path13 = getPathInfo(v1, v3, paths);
 
-                    E newWeight = weightManager.add(path12.weight, path23.weight);
-                    if (path13 != null && weightManager.compare(newWeight, path13.weight) >= 0) return;
+            E newWeight = weightManager.add(path12.weight, path23.weight);
+            if (path13 != null && weightManager.compare(newWeight, path13.weight) >= 0) return;
 
-                    if (path13 == null) {
-                        path13 = new PathInfo<V, E>();
-                        paths.get(v1).put(v3, path13);
-                    } else {
-                        path13.edgeInfos.clear();
-                    }
+            if (path13 == null) {
+                path13 = new PathInfo<>();
+                paths.get(v1).put(v3, path13);
+            } else {
+                path13.edgeInfos.clear();
+            }
 
-                    path13.weight = newWeight;
-                    path13.edgeInfos.addAll(path12.edgeInfos);
-                    path13.edgeInfos.addAll(path23.edgeInfos);
-                });
-            });
-        });
+            path13.weight = newWeight;
+            path13.edgeInfos.addAll(path12.edgeInfos);
+            path13.edgeInfos.addAll(path23.edgeInfos);
+        })));
 
         return paths;
     }

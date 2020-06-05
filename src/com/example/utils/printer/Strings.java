@@ -1,4 +1,4 @@
-package com.example.dataStructure.tree.printer;
+package com.example.utils.printer;
 
 public class Strings {
 	public static String repeat(String string, int count) {
