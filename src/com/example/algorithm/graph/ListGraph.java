@@ -14,8 +14,7 @@ public class ListGraph<V, E> extends Graph<V, E> {
 
     private final Set<Edge<V, E>> edges = new HashSet<>();
 
-    public ListGraph() {
-    }
+    public ListGraph() {}
 
     private final Comparator<Edge<V, E>> edgeComparator = (Edge<V, E> e1, Edge<V, E> e2) -> weightManager.compare(e1.weight, e2.weight);
 
@@ -162,7 +161,7 @@ public class ListGraph<V, E> extends Graph<V, E> {
 //
 //		for (Edge<V, E> edge : vertex.outEdges) {
 //			if (visitedVertices.contains(edge.to)) continue;
-//			dfs2(edge.to, visitedVertices);
+//			dfs2(edge.to, visitedVertices); //这里如果说to没有了。那么就说明到点了，就回溯到上一个节点（回溯思想）
 //		}
 //	}
 
@@ -205,7 +204,7 @@ public class ListGraph<V, E> extends Graph<V, E> {
         vertices.forEach((V v, Vertex<V, E> vertex) -> {
             int in = vertex.inEdges.size();
             if (in == 0) {
-                queue.offer(vertex);
+                queue.offer(vertex);  //入度为0就添加，否者就说明不是
             } else {
                 ins.put(vertex, in);
             }
@@ -250,7 +249,7 @@ public class ListGraph<V, E> extends Graph<V, E> {
             if (addedVertices.contains(edge.to)) continue;
             edgeInfos.add(edge.info());
             addedVertices.add(edge.to);
-            heap.addAll(edge.to.outEdges);
+            heap.addAll(edge.to.outEdges);  //根据切边最小，所生成的最小生成树
         }
         return edgeInfos;
     }
@@ -259,7 +258,7 @@ public class ListGraph<V, E> extends Graph<V, E> {
         int edgeSize = vertices.size() - 1;
         if (edgeSize == -1) return null;
         Set<EdgeInfo<V, E>> edgeInfos = new HashSet<>();
-        BinaryHeap2<Edge<V, E>> heap = new BinaryHeap2<>(edges, edgeComparator);
+        BinaryHeap2<Edge<V, E>> heap = new BinaryHeap2<>(edges, edgeComparator); //将所有的边放入，一直取出最小的，如果没有环，就说明这个边是可以接受的
         GenericUnionFind<Vertex<V, E>> uf = new GenericUnionFind<>();
         vertices.forEach((V v, Vertex<V, E> vertex) -> {
             uf.makeSet(vertex);  //所有得顶点都单独得成为一个集合。
@@ -289,7 +288,7 @@ public class ListGraph<V, E> extends Graph<V, E> {
         for (int i = 0; i < count; i++) { // v - 1 次
             for (Edge<V, E> edge : edges) {
                 PathInfo<V, E> fromPath = selectedPaths.get(edge.from.value);
-                if (fromPath == null) continue;
+                if (fromPath == null) continue; //如果为null，就说明这两个点还没有连接的路径，就不存在最短路径
                 relax(edge, fromPath, selectedPaths);
             }
         }

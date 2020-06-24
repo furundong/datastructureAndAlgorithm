@@ -23,7 +23,11 @@ public class QuickSort<E extends Comparable<E>> extends Sort<E> {
     }
 
     private int pivotIndex2(int begin, int end) {
-        E pivot = array[begin];
+        // 随机选择一个元素跟begin位置进行交换，这样有助于出现最坏情况的出现
+        //实现快速排序时，请随机地选择用作基准值的元素。快速排序的平均运行时间为O(n log n)。
+        swap(begin, begin + (int)(Math.random() * (end - begin)));
+
+        E pivot = array[begin];//基准值  或者是叫 哨兵  或者是 轴点元素
         end--;
 
         boolean flag = false;

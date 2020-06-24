@@ -4,6 +4,10 @@ import com.example.utils.tools.Times;
 
 /**
  * create by Freedom on 2020/6/5
+ *
+ * 所有的递归都可以转成非递归
+ *  自己维护一个栈，来保存参数、局部变量
+ *  但是空间复杂度依然没有得到优化
  */
 public class Main {
     public static void main(String[] args) {

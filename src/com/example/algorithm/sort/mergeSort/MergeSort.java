@@ -14,9 +14,7 @@ public class MergeSort<T extends Comparable<T>> extends Sort<T> {
     }
 
     private void sort(int begin, int end) {
-        if (end - begin < 2) {
-            return;
-        }
+        if (end - begin < 2) return; //只有一個元素了。此时就返回
 
         int mid = (begin + end) >> 1;
         sort(begin, mid);
