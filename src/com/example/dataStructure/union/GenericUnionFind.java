@@ -1,4 +1,4 @@
-package com.example.algorithm.union;
+package com.example.dataStructure.union;
 
 import java.util.HashMap;
 import java.util.Map;

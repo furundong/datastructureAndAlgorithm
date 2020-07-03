@@ -34,7 +34,7 @@ public class Queens2 {
         if (n < 1) return;
         queens = new int[n];
         cols = new boolean[n];
-        leftTop = new boolean[(n << 1) - 1];
+        leftTop = new boolean[(n << 1) - 1]; //这个对角线的条数是 2n-1
         rightTop = new boolean[leftTop.length];
         place(0);
         System.out.println(n + "皇后一共有" + ways + "种摆法");

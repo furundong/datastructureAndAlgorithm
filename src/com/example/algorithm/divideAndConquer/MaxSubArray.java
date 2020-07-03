@@ -35,6 +35,7 @@ public class MaxSubArray {
         }
         int mid = (begin + end) >> 1;
 
+        //左边的最大
         int leftMax = Integer.MIN_VALUE;
         int leftSum = 0;
         for (int i = mid - 1; i >= begin; i--) {//最后一个元素已经声明了，倒数第二个开始到第一个
@@ -42,6 +43,7 @@ public class MaxSubArray {
             leftMax = Math.max(leftMax, leftSum);
         }
 
+        //右边的最大
         int rightMax = Integer.MIN_VALUE;
         int rightSum = 0;
         for (int i = mid; i < end; i++) {
@@ -49,6 +51,7 @@ public class MaxSubArray {
             rightMax = Math.max(rightMax, rightSum);
         }
 
+        //左右两边的最大， 跟左左边 ， 跟右右边
         return Math.max(leftMax + rightMax,
                 Math.max(maxSubArray(arr, begin, mid), maxSubArray(arr, mid, end)));
     }

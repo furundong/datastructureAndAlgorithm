@@ -1,4 +1,4 @@
-package com.example.algorithm.graph;
+package com.example.dataStructure.graph;
 
 /**
  * create by Freedom on 2020/5/28

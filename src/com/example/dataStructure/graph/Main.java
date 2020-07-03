@@ -1,4 +1,4 @@
-package com.example.algorithm.graph;
+package com.example.dataStructure.graph;
 
 import java.util.ArrayList;
 import java.util.List;

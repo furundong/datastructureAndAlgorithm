@@ -2,6 +2,7 @@ package com.example.algorithm.recursion;
 
 /**
  * create by Freedom on 2020/6/5
+ * 斐波那契数列
  */
 public class Fib {
     public int fib(int n) {

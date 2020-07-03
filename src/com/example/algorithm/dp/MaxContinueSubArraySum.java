@@ -3,7 +3,7 @@ package com.example.algorithm.dp;
 /**
  * create by Freedom on 2020/6/18
  */
-public class MaxSubArray {
+public class MaxContinueSubArraySum {
     public static void main(String[] args) {
         System.out.println(maxSubArray1(new int[]{-2, 1, -3, 4, -1, 2, 1, -5, 4}));
         System.out.println(maxSubArray2(new int[]{-2, 1, -3, 4, -1, 2, 1, -5, 4}));

@@ -1,4 +1,4 @@
-package com.example.algorithm.union;
+package com.example.dataStructure.union;
 
 /**
  * Quick Union - 基于rank的优化 - 路径压缩(Path Compression)

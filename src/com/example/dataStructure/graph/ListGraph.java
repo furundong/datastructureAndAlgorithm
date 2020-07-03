@@ -1,6 +1,6 @@
-package com.example.algorithm.graph;
+package com.example.dataStructure.graph;
 
-import com.example.algorithm.union.GenericUnionFind;
+import com.example.dataStructure.union.GenericUnionFind;
 import com.example.dataStructure.heap.binaryHeap.BinaryHeap2;
 
 import java.util.*;
