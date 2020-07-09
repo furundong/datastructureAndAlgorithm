@@ -8,6 +8,9 @@ import com.example.dataStructure.heap.Heap;
 import com.example.dataStructure.heap.binaryHeap.BinaryHeap;
 import com.example.dataStructure.heap.binaryHeap.BinaryHeap2;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.*;
 
 public class Main {
@@ -55,7 +58,25 @@ public class Main {
 
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+        String pathname = "C:\\Users\\Administrator\\AppData\\Local\\Temp\\baiduyunguanjia\\onlinedit\\cache";
+        File file = new File(pathname);
+        File[] files = file.listFiles();
+        for (File file1 : files) {
+            File file2 = file1.listFiles()[0];
+            FileInputStream fis = new FileInputStream(file2.getCanonicalPath());
+            String s = "E:\\studyOnline\\";
+            FileOutputStream fos = new FileOutputStream(s +file2.getName());
+            byte[] datas = new byte[1024*8];//创建搬运工具
+            int len = 0;//创建长度
+            while((len = fis.read(datas))!=-1)//循环读取数据
+            {
+                fos.write(datas,0,len);
+            }
+        }
+    }
+
+    public static void main2(String[] args) {
 
         Map<String, Integer> map = new HashMap<>();
         map.put("1", 8);
